@@ -190,7 +190,7 @@ if [[ -z $registrar_version ]]; then
 fi
 
 if [[ -z $learner_portal ]]; then
-  learner_portal="false"
+  learner_portal="true"
 fi
 
 if [[ -z $learner_portal_version ]]; then
@@ -254,8 +254,8 @@ REGISTRAR_SANDBOX_BUILD: True
 
 LEARNER_PORTAL_NGINX_PORT: 80
 LEARNER_PORTAL_SSL_NGINX_PORT: 443
-LEARNER_PORTAL_VERSION: $registrar_version
-LEARNER_PORTAL_ENABLED: $registrar
+LEARNER_PORTAL_VERSION: $learner_portal_version
+LEARNER_PORTAL_ENABLED: $learner_portal
 LEARNER_PORTAL_SANDBOX_BUILD: True
 
 VIDEO_PIPELINE_BASE_NGINX_PORT: 80
@@ -375,7 +375,9 @@ REGISTRAR_DISCOVERY_BASE_URL: "https://discovery-${deploy_host}"
 REGISTRAR_LMS_BASE_URL: "https://${deploy_host}"
 REGISTRAR_SOCIAL_AUTH_REDIRECT_IS_HTTPS: true
 
-LEARNER_PORTAL_URL_ROOT: "https://registrar-${deploy_host}"
+LEARNER_PORTAL_URL_ROOT: "https://learner-portal-${deploy_host}"
+LEARNER_PORTAL_DISCOVERY_BASE_URL: "https://discovery-${deploy_host}"
+LEARNER_PORTAL_LMS_BASE_URL: "https://${deploy_host}"
 
 credentials_create_demo_data: true
 CREDENTIALS_LMS_URL_ROOT: "https://${deploy_host}"

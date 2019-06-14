@@ -1,0 +1,108 @@
+- name: Remove old git repo
+  file:
+    state: absent
+    path: "{{ learner_portal_code_dir }}/"
+
+- name: Remove old app repo
+  file:
+    state: absent
+    path: "{{ learner_portal_app_dir }}"
+
+- name: Create learner_portal app folder
+  file:
+    path: "{{ learner_portal_app_dir }}"
+    state: directory
+    owner: "{{ learner_portal_user }}"
+    group: "{{ learner_portal_user }}"
+
+- name: Checkout learner_portal repo into {{ learner_portal_code_dir }}
+  git:
+    dest: "{{ learner_portal_code_dir }}"
+    repo: "{{ learner_portal_repo }}"
+    version: "{{ learner_portal_version }}"
+    accept_hostkey: yes
+  become_user: "{{ learner_portal_user }}"
+  register: learner_portal_checkout
+
+- name: build virtualenv with python2.7
+  command: "virtualenv --python=python2.7 {{ learner_portal_venv_dir }}"
+  args:
+    creates: "{{ learner_portal_venv_dir }}/bin/pip"
+  become_user: "{{ learner_portal_user }}"
+  when: not edx_django_service_use_python3
+  tags:
+    - install
+    - install:system-requirements
+
+- name: Pin pip to a specific version.
+  command: "{{ learner_portal_venv_dir }}/bin/pip install pip=={{ common_pip_version }}"
+  become_user: "{{ learner_portal_user }}"
+  tags:
+    - install
+    - install:system-requirements
+
+# NOTE (CCB): Ideally we should use the pip Ansible command,
+# but that doesn't seem to work with the Python 3.x virtualenv.
+- name: install nodenv
+  command: pip install nodeenv
+  become_user: "{{ learner_portal_user }}"
+  environment: "{{ learner_portal_env_vars }}"
+  tags:
+    - install
+    - install:system-requirements
+
+# Install node
+- name: create nodeenv
+  shell: "{{ learner_portal_venv_dir }}/bin/nodeenv {{ learner_portal_nodeenv_dir }} --node={{ learner_portal_node_version }} --prebuilt --force"
+  become_user: "{{ learner_portal_user }}"
+  environment: "{{ learner_portal_env_vars }}"
+  tags:
+    - install
+    - install:system-requirements
+
+# Set the npm registry
+# This needs to be done as root since npm is weird about
+# chown - https://github.com/npm/npm/issues/3565
+- name: Set the npm registry
+  shell: "{{ learner_portal_nodeenv_bin }}/npm config set registry '{{ COMMON_NPM_MIRROR_URL }}'"
+  args:
+    creates: "{{ learner_portal_code_dir }}/.npmrc"
+  environment: "{{ learner_portal_env_vars }}"
+  become_user: "{{ learner_portal_user }}"
+  tags:
+    - install
+    - install:app-requirements
+
+#we need to do this so that npm can find a node install to use to build node-sass
+- name: prepend node path
+  shell: "{{ learner_portal_nodeenv_bin }}/npm config set scripts-prepend-node-path true"
+  environment: "{{ learner_portal_env_vars }}"
+  become_user: "{{ learner_portal_user }}"
+  tags:
+    - install
+    - install:app-requirements
+
+
+#install with the shell command instead of the ansible npm module so we don't accidentally re-write package.json
+#The version of ansible we are using also does not make use of "--unsafe-perm", which we need for node-sass
+- name: install node dependencies
+  shell: "sudo {{ learner_portal_nodeenv_bin }}/node {{ learner_portal_nodeenv_bin }}/npm i --unsafe-perm"
+  args:
+    chdir: "{{ learner_portal_code_dir }}"
+  environment: "{{ learner_portal_env_vars }}"
+  become: true
+  become_method: sudo
+  tags:
+    - install
+    - install:app-requirements
+
+#install with the shell command instead of the ansible npm module so we don't accidentally re-write package.json
+- name: run learner_portal build
+  shell: "npm run build"
+  args:
+    chdir: "{{ learner_portal_code_dir }}"
+  environment: "{{ learner_portal_env_vars }}"
+  become_user: "{{ learner_portal_user }}"
+  tags:
+    - install
+    - install:app-requirements
