@@ -1,0 +1,17 @@
+---
+#
+# edX Configuration
+#
+# github:     https://github.com/edx/configuration
+# wiki:       https://openedx.atlassian.net/wiki/display/OpenOPS
+# code style: https://openedx.atlassian.net/wiki/display/OpenOPS/Ansible+Code+Conventions
+# license:    https://github.com/edx/configuration/blob/master/LICENSE.TXT
+#
+##
+# 
+
+learner_portal_user: 'root'
+learner_portal_env_vars:
+  PATH: "{{ learner_portal_nodeenv_bin }}:{{ learner_portal_venv_dir }}/bin:{{ ansible_env.PATH }}"
+  NODE_ENV: "{{ learner_portal_environment }}"
+  ACTIVE_ENV: "{{ learner_portal_environment }}"

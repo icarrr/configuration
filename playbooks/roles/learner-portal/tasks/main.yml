@@ -1,0 +1,15 @@
+# Install nodenv
+- name: install nodenv
+  command: pip install nodeenv
+  become_user: "{{ learner_portal_user }}"
+  environment: "{{ learner_portal_env_vars }}"
+  tags:
+    - install
+    - install:system-requirements
+
+# Install node
+- name: create nodeenv
+  shell: "{{ prospectus_venv_dir }}/bin/nodeenv {{ prospectus_nodeenv_dir }} --node={{ prospectus_node_version }} --prebuilt --force"
+  tags:
+    - install
+    - install:system-requirements
