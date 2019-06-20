@@ -10,8 +10,12 @@
   roles:
     - aws
     - role: nginx
+      nginx_app_dir: "/etc/nginx"
+      nginx_sites:
+      - prospectus
       nginx_default_sites:
-      - learner_portal
+      - prospectus
+      LEARNER_PORTAL_NGINX_PORT: 8734
     - learner_portal
     - role: splunkforwarder
       when: COMMON_ENABLE_SPLUNKFORWARDER

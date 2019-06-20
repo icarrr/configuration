@@ -82,7 +82,6 @@
     - install
     - install:app-requirements
 
-
 #install with the shell command instead of the ansible npm module so we don't accidentally re-write package.json
 #The version of ansible we are using also does not make use of "--unsafe-perm", which we need for node-sass
 - name: install node dependencies

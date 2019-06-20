@@ -5,6 +5,7 @@
 {%- endif -%}
 
 server {
+  listen {{ LEARNER_PORTAL_NGINX_PORT }} {{ default_site }};
 
   listen {{ LEARNER_PORTAL_NGINX_PORT }} {{ default_site }};
 
