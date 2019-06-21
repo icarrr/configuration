@@ -12,9 +12,9 @@
     - role: nginx
       nginx_app_dir: "/etc/nginx"
       nginx_sites:
-      - prospectus
+      - learner_portal
       nginx_default_sites:
-      - prospectus
+      - learner_portal
       LEARNER_PORTAL_NGINX_PORT: 8734
     - learner_portal
     - role: splunkforwarder
