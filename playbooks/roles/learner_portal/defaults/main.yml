@@ -28,3 +28,4 @@ learner_portal_env_vars:
   PATH: "{{ learner_portal_nodeenv_bin }}:{{ learner_portal_venv_dir }}/bin:{{ ansible_env.PATH }}"
   NODE_ENV: "production"
   ACTIVE_ENV: "production"
+  
