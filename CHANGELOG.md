@@ -1,3 +1,8 @@
+- Role: common_vars
+  - Default `COMMON_JWT_PUBLIC_SIGNING_JWK_SET` to the string
+    'null' instead of the value !!null, so that it will render
+    as "null" (which is valid JSON) instead of "None" (which is not).
+
 - Role: registrar
   - Changed `REGISTRAR_CELERY_ALWAYS_EAGER` default to `false`.
 
