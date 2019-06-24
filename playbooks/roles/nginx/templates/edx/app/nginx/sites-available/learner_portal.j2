@@ -7,11 +7,8 @@
 server {
   listen {{ LEARNER_PORTAL_NGINX_PORT }} {{ default_site }};
 
-  listen {{ LEARNER_PORTAL_NGINX_PORT }} {{ default_site }};
-
-  root {{ learner_portal_dist_dir }};
-
   location / {
+      root {{ learner_portal_dist_dir }};
       try_files $uri =404;
   }
 }

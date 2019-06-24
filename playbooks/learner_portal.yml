@@ -15,7 +15,7 @@
       - learner_portal
       nginx_default_sites:
       - learner_portal
-      LEARNER_PORTAL_NGINX_PORT: 8734
+      LEARNER_PORTAL_NGINX_PORT: 8775
     - learner_portal
     - role: splunkforwarder
       when: COMMON_ENABLE_SPLUNKFORWARDER
