@@ -37,5 +37,5 @@ learner_portal_env_vars:
   ACCESS_TOKEN_COOKIE_NAME: 'edx-jwt-cookie-header-payload'
   USER_INFO_COOKIE_NAME: 'edx-user-info'
   DESIGNER_BASE_URL: 'http://localhost:18808'
-  SITE_NAME: 'hogwarts.edx.org'
+  SITE_NAME: ''
   SEGMENT_KEY: ''

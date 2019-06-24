@@ -6,12 +6,22 @@
 
 server {
   listen {{ LEARNER_PORTAL_NGINX_PORT }} {{ default_site }};
-
+  server_name ~^((stage|prod)-)?learner_portal.*;
   location / {
-    root {{ learner_portal_dist_dir }};
-    try_files $uri @index;
+    root /edx/app/learner_portal/learner_portal/dist;
+    index index.html;
   }
-  location @index {
-    try_files $uri/index.html =404;
+}
+
+server {
+  listen {{ LEARNER_PORTAL_SSL_NGINX_PORT }} ssl;
+  server_name ~^((stage|prod)-)?learner_portal.*;
+  server_name ~^((stage|prod)-)?learner_portal.*;
+  ssl_certificate /etc/ssl/certs/wildcard.sandbox.edx.org.pem;
+  ssl_certificate_key /etc/ssl/private/wildcard.sandbox.edx.org.key;
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+  location / {
+    root /edx/app/learner_portal/learner_portal/dist;
+    index index.html;
   }
 }
