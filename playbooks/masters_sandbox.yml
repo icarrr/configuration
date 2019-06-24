@@ -12,10 +12,14 @@
   tasks:
     - name: debug task
       shell: echo {{env_path}} {{foo}} {{bar}}
+    
+    - name: create lms user
+      shell: >
+        . {{ env_path }} && {{ edxapp_venv_dir }}/bin/python manage.py lms manage_user {{username}} {{email}}
 
     - name: create user api access request
       shell: >
         . {{ env_path }} && {{ edxapp_venv_dir }}/bin/python manage.py lms create_api_access_request {{username}}
-        --site-name {{site_name}} --reason {{reason}} --website {{website}} --create-config --production
+        --reason {{reason}} --website {{website}} --create-config --production
       args:
         chdir: "{{ edxapp_code_dir }}"

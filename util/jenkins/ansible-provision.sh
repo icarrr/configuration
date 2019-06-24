@@ -469,6 +469,17 @@ fi
 # set the hostname
 run_ansible set_hostname.yml -i "${deploy_host}," -e hostname_fqdn=${deploy_host} --user ubuntu
 
+# masters env setup (TODO!! this should be conditional)
+cat << EOF >> $extra_vars_file
+foo: "hello"
+bar: "world"
+username: "spongebob"
+email: "zhancock@edx.org"
+reason: "testing"
+website: "http://www.test.org"
+EOF
+run_ansible masters_sandbox.yml -i "${deploy_host}," $extra_var_arg --user ubuntu
+
 if [[ $set_whitelabel == "true" ]]; then
     # Setup Whitelabel themes
     run_ansible whitelabel.yml -i "${deploy_host}," $extra_var_arg --user ubuntu
