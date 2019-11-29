@@ -87,8 +87,6 @@ git pull
 ##
 cd /var/tmp/configuration
 sudo -H pip install -r requirements.txt
-sudo rm -f /etc/boto.cfg
-unset $BOTO_CONFIG
 
 ##
 ## Run the edx_sandbox.yml playbook in the configuration/playbooks directory
